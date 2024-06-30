@@ -1,30 +1,37 @@
 {
-  "manifest_version": 3,
-  "name": "SurfSafety",
-  "version": "1.0",
-  "description": "A Chrome extension to detect and block phishing sites.",
-  "permissions": [
-    "webRequest",
-    "webRequestBlocking",
-    "storage",
-    "notifications",
-    "activeTab",
-    "tabs"
-  ],
-  "background": {
-    "service_worker": "background.js"
-  },
-  "action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "16": "icon.png",
-      "48": "icon.png",
-      "128": "icon.png"
+    "manifest_version": 3,
+    "name": "Safe Browse",
+    "version": "1.0",
+    "description": "Protect against phishing attacks with real-time URL analysis and alerts.",
+    "permissions": [
+      "declarativeNetRequest",
+      "declarativeNetRequestFeedback",
+      "storage"
+    ],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "action": {
+      "default_popup": "popup.html",
+      "default_icon": {
+        "16": "icons/icon16.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
+      }
+    },
+    "icons": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "declarative_net_request": {
+      "rule_resources": [
+        {
+          "id": "ruleset_1",
+          "enabled": true,
+          "path": "rules.json"
+        }
+      ]
     }
-  },
-  "icons": {
-    "16": "icon.png",
-    "48": "icon.png",
-    "128": "icon.png"
   }
-}
+  

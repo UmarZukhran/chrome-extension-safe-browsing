@@ -1,27 +1,51 @@
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('blockSite').addEventListener('click', blockCurrentSite);
-    document.getElementById('reportSite').addEventListener('click', reportPhishingSite);
-  });
-  
-  function blockCurrentSite() {
-    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-      const url = tabs[0].url;
-      chrome.storage.local.get('phishingUrls', function(data) {
-        const updatedUrls = data.phishingUrls || [];
-        if (!updatedUrls.includes(url)) {
-          updatedUrls.push(url);
-          chrome.storage.local.set({ phishingUrls: updatedUrls }, function() {
-            alert('Site blocked successfully.');
-          });
-        } else {
-          alert('Site is already blocked.');
-        }
+document.getElementById('blockButton').addEventListener('click', () => {
+  const url = document.getElementById('url').value.trim();
+  const statusElement = document.getElementById('status');
+  if (url) {
+      chrome.runtime.sendMessage({ type: 'addUrl', url }, (response) => {
+          if (response.success) {
+              statusElement.innerText = 'URL blocked successfully!';
+              statusElement.className = 'text-success';
+              document.getElementById('url').value = '';
+              loadBlockedUrls();
+          } else {
+              statusElement.innerText = response.error || 'Failed to block URL.';
+              statusElement.className = 'text-danger';
+          }
       });
-    });
+  } else {
+      statusElement.innerText = 'Please enter a valid URL.';
+      statusElement.className = 'text-danger';
   }
-  
-  function reportPhishingSite() {
-    // Implement reporting functionality
-    alert('Site reported as phishing.');
-  }
-  
+});
+
+function loadBlockedUrls() {
+  chrome.runtime.sendMessage({ type: 'getBlockedUrls' }, (response) => {
+      const blockedUrls = response.blockedUrls;
+      const blockedUrlsContainer = document.getElementById('blockedUrls');
+      blockedUrlsContainer.innerHTML = '';
+
+      blockedUrls.forEach(url => {
+          const urlItem = document.createElement('div');
+          urlItem.className = 'url-item list-group-item d-flex justify-content-between align-items-center';
+          urlItem.textContent = url;
+
+          const deleteButton = document.createElement('button');
+          deleteButton.className = 'btn btn-danger btn-sm';
+          deleteButton.textContent = 'Delete';
+          deleteButton.addEventListener('click', () => {
+              chrome.runtime.sendMessage({ type: 'removeUrl', url }, (response) => {
+                  if (response.success) {
+                      loadBlockedUrls();
+                  }
+              });
+          });
+
+          urlItem.appendChild(deleteButton);
+          blockedUrlsContainer.appendChild(urlItem);
+      });
+  });
+}
+
+// Load the blocked URLs when the popup is opened
+document.addEventListener('DOMContentLoaded', loadBlockedUrls);
