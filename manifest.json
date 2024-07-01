@@ -6,11 +6,28 @@
     "permissions": [
       "declarativeNetRequest",
       "declarativeNetRequestFeedback",
-      "storage"
+      "declarativeNetRequestWithHostAccess",
+      "storage",
+      "tabs",
+      "activeTab",
+      "notifications"
     ],
+    "host_permissions" : ["<all_urls>"],
     "background": {
       "service_worker": "background.js"
     },
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "js": ["content.js"]
+      }
+    ],
+    "web_accessible_resources": [
+      {
+          "resources": ["config.js"],
+          "matches": ["<all_urls>"]
+      }
+    ],
     "action": {
       "default_popup": "popup.html",
       "default_icon": {
