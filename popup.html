@@ -5,14 +5,20 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h2>Block a URL</h2>
-    <div class="input-group">
-        <input type="text" id="url" placeholder="Enter URL to block">
-        <button id="blockButton">Block</button>
+    <div class="container">
+        <h2>Block a URL</h2>
+        <div class="input-group">
+            <input type="text" id="url" placeholder="Enter URL to block">
+            <button id="blockButton">Block</button>
+        </div>
+        <p id="status"></p>
+        <h3>Blocked URLs</h3>
+        <div id="blockedUrls"></div>
+        <button id="clearBlockedUrlsButton">Clear Blocked URLs</button>
+        <h3>Known Malicious URLs</h3>
+        <ul id="malicious-urls-list"></ul>
+        <button id="clearMaliciousUrlsButton">Clear Malicious URLs</button>
     </div>
-    <p id="status"></p>
-    <h3>Blocked URLs</h3>
-    <div id="blockedUrls"></div>
     <script src="popup.js"></script>
 </body>
 </html>

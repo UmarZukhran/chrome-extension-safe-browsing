@@ -19,6 +19,26 @@ document.getElementById('blockButton').addEventListener('click', () => {
   }
 });
 
+document.addEventListener('DOMContentLoaded', function() {
+    chrome.storage.local.get('maliciousUrls', function(result) {
+        if (chrome.runtime.lastError) {
+            console.error('Error fetching malicious URLs:', chrome.runtime.lastError);
+            return;
+        }
+
+        const maliciousUrls = result.maliciousUrls || [];
+        const listContainer = document.getElementById('malicious-urls-list');
+        listContainer.innerHTML = ''; // Clear existing entries
+
+        maliciousUrls.forEach(urlInfo => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${urlInfo.url} - Threat Type: ${urlInfo.threatType}`;
+            listContainer.appendChild(listItem);
+        });
+    });
+});
+
+
 function loadBlockedUrls() {
   chrome.runtime.sendMessage({ type: 'getBlockedUrls' }, (response) => {
       const blockedUrls = response.blockedUrls;
@@ -46,6 +66,28 @@ function loadBlockedUrls() {
       });
   });
 }
+
+// Event listener to clear blocked URLs
+document.getElementById('clearBlockedUrlsButton').addEventListener('click', () => {
+    chrome.runtime.sendMessage({ type: 'clearBlockedUrls' }, (response) => {
+        if (response.success) {
+            loadBlockedUrls();
+        }
+    });
+});
+
+// Event listener to clear malicious URLs
+document.getElementById('clearMaliciousUrlsButton').addEventListener('click', () => {
+    chrome.storage.local.remove('maliciousUrls', () => {
+        if (chrome.runtime.lastError) {
+            console.error('Error clearing malicious URLs:', chrome.runtime.lastError);
+        } else {
+            const listContainer = document.getElementById('malicious-urls-list');
+            listContainer.innerHTML = ''; // Clear the list in the popup
+            console.log('Malicious URLs cleared successfully');
+        }
+    });
+});
 
 // Load the blocked URLs when the popup is opened
 document.addEventListener('DOMContentLoaded', loadBlockedUrls);
