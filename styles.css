@@ -6,6 +6,10 @@ body {
   color: #333;
 }
 
+a {
+  text-decoration: none;
+}
+
 ul, li {
   margin: 0;
   padding: 0;
