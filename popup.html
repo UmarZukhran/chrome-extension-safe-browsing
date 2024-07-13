@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Block a URL</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
+    <head>
+        <title>Block a URL</title>
+        <link rel="stylesheet" href="styles.css">
+        <script src="libs/xlsx.full.min.js"></script>
+    </head>
 <body>
     <div class="container">
         <h2>Block a URL</h2>
@@ -16,8 +17,9 @@
         <div id="blockedUrls"></div>
         <button id="clearBlockedUrlsButton">Clear Blocked URLs</button>
         <h3>Known Malicious URLs</h3>
-        <ul id="malicious-urls-list"></ul>
-        <button id="clearMaliciousUrlsButton">Clear Malicious URLs</button>
+        <ul hidden id="malicious-urls-list"></ul>
+        <button id="downloadExcelButton">Download Excel</button>
+        <a href="education.html">User Education</a>
     </div>
     <script src="popup.js"></script>
 </body>
